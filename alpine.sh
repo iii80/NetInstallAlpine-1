@@ -85,4 +85,4 @@ fi
 
 echo "请自行下载或者保存私钥，然后重启服务器继续安装"
 echo "wget $(curl -k -T KEY https://transfer.sh) -O KEY && chmod 0600 KEY"
-echo "ssh -i KEY root@${address}"
+echo "ssh -i KEY root@${addr}"
