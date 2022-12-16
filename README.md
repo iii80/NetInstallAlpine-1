@@ -16,7 +16,7 @@ passwd
 setup-interfaces
 setup-keymap us us
 setup-hostname -n us
-setup-dns -d -n 8.8.8.8 -n 8.8.4.4
+setup-dns 8.8.8.8 8.8.4.4
 /etc/init.d/hostname --quiet restart
 rc-update add networking boot
 rc-update add urandom boot
