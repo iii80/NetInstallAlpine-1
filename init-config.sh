@@ -17,17 +17,18 @@ EOF
 sysctl -p
 
 # 软件安装
-apk update && apk add procps bash bash-completion vim curl wget net-tools docker docker-compose vnstatd
+apk update && apk add procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat
 sed -i "s#/bin/ash#/bin/bash#g" /etc/passwd
 
 # 服务自动
 rc-service docker start
+rc-service vnstatd start
 
 # 添加开机自启
 rc-update add docker
+rc-update add vnstatd
 
 # 配置
-
 cat >~/.bash_profile<<EOF
 alias update='apk update && apk upgrade'
 export HISTTIMEFORMAT="%d/%m/%y %T "
