@@ -8,7 +8,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF
 
-开启 BBR
+# 开启 BBR
 cat >/etc/sysctl.conf<<EOF
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
