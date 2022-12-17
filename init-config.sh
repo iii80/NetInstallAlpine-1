@@ -1,3 +1,4 @@
+#!/bin/sh
 # 清空 motd
 echo ''>/etc/motd
 
