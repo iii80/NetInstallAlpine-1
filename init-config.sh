@@ -17,10 +17,11 @@ EOF
 sysctl -p
 
 # 软件安装
-apk update && apk add procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat zram-init
+apk update && apk add tzdata procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat zram-init 
 
 
 # 配置
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sed -i "s#/bin/ash#/bin/bash#g" /etc/passwd
 cat >~/.bash_profile<<EOF
 alias update='apk update && apk upgrade'
