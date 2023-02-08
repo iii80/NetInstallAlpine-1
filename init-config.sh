@@ -6,6 +6,7 @@ echo ''>/etc/motd
 cat >/etc/apk/repositories <<EOF
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+http://dl-cdn.alpinelinux.org/alpine/edge/testing
 EOF
 
 # 开启 BBR
