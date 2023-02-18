@@ -9,14 +9,6 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 http://dl-cdn.alpinelinux.org/alpine/edge/testing
 EOF
 
-# 开启 BBR
-cat >/etc/sysctl.conf<<EOF
-net.core.default_qdisc=fq
-net.ipv4.tcp_congestion_control=bbr
-net.ipv4.ip_local_port_range=60000 65535
-EOF
-sysctl -p
-
 # 优化 TCP 窗口
 sed -i '/net.ipv4.tcp_no_metrics_save/d' /etc/sysctl.conf
 sed -i '/net.ipv4.tcp_ecn/d' /etc/sysctl.conf
@@ -36,7 +28,7 @@ sed -i '/net.ipv4.udp_rmem_min/d' /etc/sysctl.conf
 sed -i '/net.ipv4.udp_wmem_min/d' /etc/sysctl.conf
 sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
 sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
-cat >> /etc/sysctl.conf << EOF
+cat > /etc/sysctl.conf << EOF
 net.ipv4.tcp_no_metrics_save=1
 net.ipv4.tcp_ecn=0
 net.ipv4.tcp_frto=0
@@ -55,6 +47,7 @@ net.ipv4.udp_rmem_min=8192
 net.ipv4.udp_wmem_min=8192
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
+net.ipv4.ip_local_port_range=60000 65535
 EOF
 sysctl -p && sysctl --system
 
