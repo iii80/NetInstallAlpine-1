@@ -40,7 +40,7 @@ apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim 
 
 # 配置
 
-sed "s#/opt/containerd#/var/lib/containerd/opt#g"  -i /etc/containerd/config.toml
+mkdir -p /var/lib/containerd/opt && sed "s#/opt/containerd#/var/lib/containerd/opt#g"  -i /etc/containerd/config.toml
 
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sed -i "s#/bin/ash#/bin/bash#g" /etc/passwd
