@@ -10,24 +10,6 @@ http://dl-cdn.alpinelinux.org/alpine/edge/testing
 EOF
 
 # 优化 TCP 窗口
-sed -i '/net.ipv4.tcp_no_metrics_save/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_ecn/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_frto/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_mtu_probing/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_rfc1337/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_sack/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_fack/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_window_scaling/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_adv_win_scale/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_moderate_rcvbuf/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_rmem/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_wmem/d' /etc/sysctl.conf
-sed -i '/net.core.rmem_max/d' /etc/sysctl.conf
-sed -i '/net.core.wmem_max/d' /etc/sysctl.conf
-sed -i '/net.ipv4.udp_rmem_min/d' /etc/sysctl.conf
-sed -i '/net.ipv4.udp_wmem_min/d' /etc/sysctl.conf
-sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
 cat > /etc/sysctl.conf << EOF
 net.ipv4.tcp_no_metrics_save=1
 net.ipv4.tcp_ecn=0
@@ -55,8 +37,10 @@ sysctl -p && sysctl --system
 # 软件安装
 apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat zram-init 
 
-
 # 配置
+
+sed "s#/opt/containerd#/var/lib/containerd/opt#g"  -i /etc/containerd/config.toml
+
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sed -i "s#/bin/ash#/bin/bash#g" /etc/passwd
 cat >~/.bash_profile<<EOF
@@ -69,6 +53,7 @@ alias ll='ls -alF'
 alias ls='ls --color=auto'
 source /etc/profile.d/bash_completion.sh
 EOF
+
 cat>/etc/conf.d/zram-init<<EOF
 load_on_start=yes
 unload_on_stop=yes
@@ -89,7 +74,6 @@ algo0=zstd
 labl0=zram_swap
 uuid0=
 args0=
-
 EOF
 
 # 服务自动
