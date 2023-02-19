@@ -11,6 +11,7 @@ EOF
 
 # 优化 TCP 窗口
 cat > /etc/sysctl.conf << EOF
+net.ipv4.ip_forward = 1
 net.ipv4.tcp_no_metrics_save=1
 net.ipv4.tcp_ecn=0
 net.ipv4.tcp_frto=0
