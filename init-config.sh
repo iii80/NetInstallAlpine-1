@@ -32,7 +32,7 @@ net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 net.ipv4.ip_local_port_range=60000 65535
 EOF
-sysctl -p && sysctl --system
+sysctl -p
 
 
 # 软件安装
