@@ -19,7 +19,7 @@ cidr2mask() {
 }
 
 branch=latest-stable
-mirror=http://dl-cdn.alpinelinux.org/alpine
+mirror=https://dl-cdn.alpinelinux.org/alpine
 flavor=lts
 address=$(ip -o -f inet addr show | awk '/scope global/ {print $4}' | head -n 1)
 addr=$(echo $address | awk -F'/' '{print $1}')
