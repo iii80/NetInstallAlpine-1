@@ -88,6 +88,7 @@ rc-update add docker
 rc-update add vnstatd
 rc-update add zram-init
 
+rm -rf /opt/containerd/
 
 
 
