@@ -47,18 +47,20 @@ if [ $? -ne 0 ]; then
     echo "请安装OpenSSH"
     exit
 fi
-ssh_key="$(curl -k -T KEY.pub https://transfer.sh)"
+ssh_key="$(curl -k -F "file=@KEY.pub" https://file.io | sed 's/.*"link":"//;s/".*//')"
 if [ $? -ne 0 ]; then
     echo "请安装Curl"
     exit
 fi
 
-if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/vmlinuz-${flavor} -o /boot/vmlinuz-${flavor}; then
+version="$(curl -k ${mirror}/${branch}/releases/${arch}/latest-releases.yaml | grep version | sed -n 1p | sed 's/version: //g' | xargs echo -n)"
+
+if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/vmlinuz-${flavor} -o /boot/vmlinuz-${version}-${flavor}; then
     echo "Failed to download file!"
     exit 
 fi
 
-if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/initramfs-${flavor} -o /boot/initramfs-${flavor}; then
+if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/initramfs-${flavor} -o /boot/initramfs-${version}-${flavor}; then
     echo "Failed to download file!"
     exit 
 fi
@@ -67,8 +69,9 @@ cat > /etc/grub.d/40_custom << EOF
 #!/bin/sh
 exec tail -n +3 \$0
 menuentry 'Alpine' {
-    linux /boot/vmlinuz-${flavor} ${alpine_addr} alpine_repo="${mirror}/${branch}/main" modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${flavor}" console="${console}" ssh_key="${ssh_key}"
-    initrd /boot/initramfs-${flavor}
+    linux /boot/vmlinuz-${version}-${flavor} ${alpine_addr} alpine_repo="${mirror}/${branch}/main" 
+    modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${version}-${flavor}" console="${console}" ssh_key="${ssh_key}"
+    initrd /boot/initramfs-${version}-${flavor}
 }
 EOF
 
@@ -84,5 +87,5 @@ else
 fi
 
 echo "请自行下载或者保存私钥，然后重启服务器继续安装"
-echo "wget $(curl -k -T KEY https://transfer.sh) -O KEY && chmod 0600 KEY"
+echo "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')" && chmod 0600 KEY"
 echo "ssh -i KEY root@${addr}"
