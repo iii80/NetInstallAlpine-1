@@ -20,7 +20,8 @@ sysctl -p
 
 
 # 软件安装
-apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat zram-init 
+apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim curl wget net-tools docker vnstat zram-init
+
 
 # 配置
 
