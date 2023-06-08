@@ -1,4 +1,4 @@
-#!/bin/sh
+#!sh
 
 # Check if user is root
 if [ "$(id -u)" != "0" ]; then
@@ -13,14 +13,11 @@ echo "+------------------------------------------------------------------------+
 echo "|                  A script to Net Install  Alpine                       |"
 echo "+------------------------------------------------------------------------+"
 
-cidr2mask() {
-    value=$(( 0xffffffff ^ ((1 << (32 - $1)) - 1) ))
-    echo "$(( ($value >> 24) & 0xff )).$(( ($value >> 16) & 0xff )).$(( ($value >> 8) & 0xff )).$(( $value & 0xff ))"
-}
-
+console=tty0
 branch=latest-stable
 mirror=https://dl-cdn.alpinelinux.org/alpine
 flavor=lts
+
 address=$(ip -o -f inet addr show | awk '/scope global/ {print $4}' | head -n 1)
 addr=$(echo $address | awk -F'/' '{print $1}')
 cidr=$(echo $address | awk -F'/' '{print $2}')
@@ -41,7 +38,7 @@ else
 fi
 echo "系统平台：${arch}"
 
-console=tty0
+
 echo yes | ssh-keygen -t ed25519 -N '' -f KEY
 if [ $? -ne 0 ]; then
     echo "请安装OpenSSH"
@@ -54,13 +51,12 @@ if [ $? -ne 0 ]; then
 fi
 
 version="$(curl -k ${mirror}/${branch}/releases/${arch}/latest-releases.yaml | grep version | sed -n 1p | sed 's/version: //g' | xargs echo -n)"
-
-if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/vmlinuz-${flavor} -o /boot/vmlinuz-${version}-${flavor}; then
+if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/vmlinuz-${flavor} -o /boot/vmlinuz-${version}-netboot; then
     echo "Failed to download file!"
     exit 
 fi
 
-if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/initramfs-${flavor} -o /boot/initramfs-${version}-${flavor}; then
+if ! curl -k -f -# ${mirror}/${branch}/releases/${arch}/netboot/initramfs-${flavor} -o /boot/initramfs-${version}-netboot; then
     echo "Failed to download file!"
     exit 
 fi
@@ -69,9 +65,8 @@ cat > /etc/grub.d/40_custom << EOF
 #!/bin/sh
 exec tail -n +3 \$0
 menuentry 'Alpine' {
-    linux /boot/vmlinuz-${version}-${flavor} ${alpine_addr} alpine_repo="${mirror}/${branch}/main" 
-    modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${version}-${flavor}" console="${console}" ssh_key="${ssh_key}"
-    initrd /boot/initramfs-${version}-${flavor}
+    linux /boot/vmlinuz-${version}-netboot alpine_repo="${mirror}/${branch}/main" modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${version}-netboot" console="${console}" ssh_key="${ssh_key}"
+    initrd /boot/initramfs-${version}-netboot
 }
 EOF
 
@@ -86,6 +81,5 @@ else
     exit
 fi
 
-echo "请自行下载或者保存私钥，然后重启服务器继续安装"
 echo "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')"
 echo "ssh -i KEY root@${addr}"
