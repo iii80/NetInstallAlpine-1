@@ -87,5 +87,5 @@ else
 fi
 
 echo "请自行下载或者保存私钥，然后重启服务器继续安装"
-echo "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')" && chmod 0600 KEY"
+echo "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')"
 echo "ssh -i KEY root@${addr}"
