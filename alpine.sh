@@ -65,7 +65,7 @@ cat > /etc/grub.d/40_custom << EOF
 #!/bin/sh
 exec tail -n +3 \$0
 menuentry 'Alpine' {
-    linux /boot/vmlinuz-${version}-netboot alpine_repo="${mirror}/${branch}/main" modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${version}-netboot" console="${console}" ssh_key="${ssh_key}"
+    linux /boot/vmlinuz-${version}-netboot ${alpine_addr} alpine_repo="${mirror}/${branch}/main" modloop="${mirror}/${branch}/releases/${arch}/netboot/modloop-${flavor}" modules="loop,squashfs" initrd="initramfs-${version}-netboot" console="${console}" ssh_key="${ssh_key}"
     initrd /boot/initramfs-${version}-netboot
 }
 EOF
