@@ -18,6 +18,10 @@ branch=latest-stable
 mirror=https://dl-cdn.alpinelinux.org/alpine
 flavor=lts
 
+cidr2mask() {
+    value=$(( 0xffffffff ^ ((1 << (32 - $1)) - 1) ))
+    echo "$(( ($value >> 24) & 0xff )).$(( ($value >> 16) & 0xff )).$(( ($value >> 8) & 0xff )).$(( $value & 0xff ))"
+}
 address=$(ip -o -f inet addr show | awk '/scope global/ {print $4}' | head -n 1)
 addr=$(echo $address | awk -F'/' '{print $1}')
 cidr=$(echo $address | awk -F'/' '{print $2}')
