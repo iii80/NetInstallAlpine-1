@@ -15,6 +15,7 @@ net.ipv4.ip_forward = 1
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 net.ipv4.ip_local_port_range=60000 65535
+vm.swappiness = 100
 EOF
 sysctl -p
 
@@ -71,7 +72,7 @@ rc-update add docker
 rc-update add vnstatd
 rc-update add zram-init
 
-sleep 3
+sleep 5
 while [ -d /opt/containerd ]
 do
   rm -rf /opt/containerd/
