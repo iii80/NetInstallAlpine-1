@@ -85,5 +85,5 @@ else
     exit
 fi
 
-echo "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')"
+echo "wget -O KEY" "$(curl -k -F "file=@KEY" https://file.io | sed 's/.*"link":"//;s/".*//')" "&& chmod 0600 KEY"
 echo "ssh -i KEY root@${addr}"
