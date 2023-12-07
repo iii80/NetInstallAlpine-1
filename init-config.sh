@@ -9,6 +9,9 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 http://dl-cdn.alpinelinux.org/alpine/edge/testing
 EOF
 
+# 软件安装
+apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat
+
 # 开启BBR
 rm -rf /etc/sysctl.d/*
 cat <<EOF >/etc/sysctl.conf
@@ -103,15 +106,9 @@ sysctl -p &> /dev/null
 # sed -i "s#.*net.netfilter.nf_conntrack_max=.*#net.netfilter.nf_conntrack_max=$nf_conntrack_max#g" /etc/sysctl.conf
 # sed -i "s#.*net.netfilter.nf_conntrack_buckets=.*#net.netfilter.nf_conntrack_buckets=$nf_conntrack_buckets#g" /etc/sysctl.conf
 
-
-# 软件安装
-apk update && apk add coreutils iproute2 tzdata procps bash bash-completion vim curl wget net-tools docker docker-compose vnstat zram-init
-
-
 # 配置
 
 mkdir -p /var/lib/containerd/opt && sed "s#/opt/containerd#/var/lib/containerd/opt#g"  -i /etc/containerd/config.toml
-
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 sed -i "s#/bin/ash#/bin/bash#g" /etc/passwd
 cat >~/.bash_profile<<EOF
@@ -124,27 +121,27 @@ alias ll='ls -alF'
 alias ls='ls --color=auto'
 EOF
 
-cat>/etc/conf.d/zram-init<<EOF
-load_on_start=yes
-unload_on_stop=yes
+# cat>/etc/conf.d/zram-init<<EOF
+# load_on_start=yes
+# unload_on_stop=yes
 
-num_devices=1
+# num_devices=1
 
-type0=swap
-flag0=
-size0=`LC_ALL=C free -m | awk '/^Mem:/{print int($2/1)}'`
-mlim0=`LC_ALL=C cat /proc/cpuinfo | grep "processor" | wc -l`
-back0=
-icmp0=
-idle0=
-wlim0=
-notr0=
-maxs0=1
-algo0=zstd
-labl0=zram_swap
-uuid0=
-args0=
-EOF
+# type0=swap
+# flag0=
+# size0=`LC_ALL=C free -m | awk '/^Mem:/{print int($2/1)}'`
+# mlim0=`LC_ALL=C cat /proc/cpuinfo | grep "processor" | wc -l`
+# back0=
+# icmp0=
+# idle0=
+# wlim0=
+# notr0=
+# maxs0=1
+# algo0=zstd
+# labl0=zram_swap
+# uuid0=
+# args0=
+# EOF
 
 # 服务自动
 rc-service docker start
