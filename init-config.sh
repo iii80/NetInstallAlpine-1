@@ -146,12 +146,12 @@ EOF
 # 服务自动
 rc-service docker start
 rc-service vnstatd start
-rc-service zram-init start
+# rc-service zram-init start
 
 # 添加开机自启
 rc-update add docker
 rc-update add vnstatd
-rc-update add zram-init
+# rc-update add zram-init
 
 sleep 5
 while [ -d /opt/containerd ]
