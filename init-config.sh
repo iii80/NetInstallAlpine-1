@@ -103,8 +103,8 @@ fi
 sysctl -p &> /dev/null
 
 
-# sed -i "s#.*net.netfilter.nf_conntrack_max=.*#net.netfilter.nf_conntrack_max=$nf_conntrack_max#g" /etc/sysctl.conf
-# sed -i "s#.*net.netfilter.nf_conntrack_buckets=.*#net.netfilter.nf_conntrack_buckets=$nf_conntrack_buckets#g" /etc/sysctl.conf
+sed -i "s#.*net.netfilter.nf_conntrack_max = .*#net.netfilter.nf_conntrack_max = $nf_conntrack_max#g" /etc/sysctl.conf
+sed -i "s#.*net.netfilter.nf_conntrack_buckets = .*#net.netfilter.nf_conntrack_buckets = $nf_conntrack_buckets#g" /etc/sysctl.conf
 
 # 配置
 
